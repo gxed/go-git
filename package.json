@@ -33,9 +33,9 @@
     },
     {
       "author": "magik6k",
-      "hash": "QmeX4GSUw44DLgRX2hNR4Fq4R4pXBvJvj3D4v3mo5dtcTi",
+      "hash": "QmQGcRZp7umQEFxxbbQeZYKFWJS4qU9NqZHwgZHcvDgqcX",
       "name": "ssh-agent",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "author": "golang",
@@ -61,6 +61,6 @@
   "license": "",
   "name": "go-git.v4",
   "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
-  "version": "1.0.3"
+  "version": "1.0.4"
 }
 
