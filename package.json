@@ -27,9 +27,9 @@
     },
     {
       "author": "magik6k",
-      "hash": "QmWa1AZUbbudLwWUQUQLzP2yheFZGfj62cU1cJx795nsDv",
+      "hash": "QmZgFFxqKCNGgWcu4xGJB58iqZxhEAHg8rFbfcS4s37hUY",
       "name": "gcfg",
-      "version": "1.0.1"
+      "version": "1.0.2"
     },
     {
       "author": "magik6k",
@@ -61,6 +61,6 @@
   "license": "",
   "name": "go-git.v4",
   "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
 
