@@ -27,9 +27,9 @@
     },
     {
       "author": "magik6k",
-      "hash": "QmQRkamCvJN6GuBs1Lpk1ADnsxg3dAAddTqusoW9ADRMZz",
+      "hash": "QmWa1AZUbbudLwWUQUQLzP2yheFZGfj62cU1cJx795nsDv",
       "name": "gcfg",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "author": "magik6k",
@@ -51,9 +51,9 @@
     },
     {
       "author": "magik6k",
-      "hash": "QmTfKvZZhGHuqXxg5XDHZR8BnNvCU6tbykNepbCh6avXVr",
+      "hash": "QmSbKbWYnJQXm5tS2PVqRrD2T84t3XuBpjyZH4wQ6W7izm",
       "name": "go-billy.v3",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ],
   "gxVersion": "0.12.1",
@@ -61,6 +61,6 @@
   "license": "",
   "name": "go-git.v4",
   "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
 
