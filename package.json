@@ -1,0 +1,66 @@
+{
+  "author": "magik6k",
+  "bugs": {
+    "url": "https://github.com/gxed/go-git"
+  },
+  "gx": {
+    "dvcsimport": "gopkg.in/src-d/go-git.v4"
+  },
+  "gxDependencies": [
+    {
+      "author": "jbenet",
+      "hash": "QmX6DhWrpBB5NtadXmPSXYNdVvuLfJXoFNMvUMoVvP5UJa",
+      "name": "go-context",
+      "version": "0.0.0"
+    },
+    {
+      "author": "mitchellh",
+      "hash": "QmdcULN1WCzgoQmcCaUAmEhwcxHYsDrbZ2LvRJKCL8dMrK",
+      "name": "go-homedir",
+      "version": "1.0.0"
+    },
+    {
+      "author": "magik6k",
+      "hash": "QmacXKm3tTnVZHxzvuwdsCLKyqzLxXET9ZEVSPBnksyjsS",
+      "name": "go-diff",
+      "version": "1.0.0"
+    },
+    {
+      "author": "magik6k",
+      "hash": "QmQRkamCvJN6GuBs1Lpk1ADnsxg3dAAddTqusoW9ADRMZz",
+      "name": "gcfg",
+      "version": "1.0.0"
+    },
+    {
+      "author": "magik6k",
+      "hash": "QmeX4GSUw44DLgRX2hNR4Fq4R4pXBvJvj3D4v3mo5dtcTi",
+      "name": "ssh-agent",
+      "version": "1.0.0"
+    },
+    {
+      "author": "golang",
+      "hash": "QmW7VUmSvhvSGbYbdsh7uRjhGmsYkc9fL8aJ5CorxxrU5N",
+      "name": "go-crypto",
+      "version": "0.2.1"
+    },
+    {
+      "author": "golang",
+      "hash": "QmVcxhXDbXjNoAdmYBWbY1eU67kQ8eZUHjG4mAYZUtZZu3",
+      "name": "go-text",
+      "version": "0.2.0"
+    },
+    {
+      "author": "magik6k",
+      "hash": "QmTfKvZZhGHuqXxg5XDHZR8BnNvCU6tbykNepbCh6avXVr",
+      "name": "go-billy.v3",
+      "version": "1.0.0"
+    }
+  ],
+  "gxVersion": "0.12.1",
+  "language": "go",
+  "license": "",
+  "name": "go-git.v4",
+  "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
+  "version": "1.0.0"
+}
+
