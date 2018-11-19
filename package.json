@@ -9,9 +9,9 @@
   "gxDependencies": [
     {
       "author": "jbenet",
-      "hash": "QmX6DhWrpBB5NtadXmPSXYNdVvuLfJXoFNMvUMoVvP5UJa",
+      "hash": "QmREZJKLgLXQMBePwrAMnxQEFuRhfv35Et1gFqGk5QhZdz",
       "name": "go-context",
-      "version": "0.0.0"
+      "version": "1.0.0"
     },
     {
       "author": "mitchellh",
@@ -51,8 +51,14 @@
     },
     {
       "author": "magik6k",
-      "hash": "QmSbKbWYnJQXm5tS2PVqRrD2T84t3XuBpjyZH4wQ6W7izm",
-      "name": "go-billy.v3",
+      "hash": "QmZsKB6GsrmUByrzJsv4a7S9wnepdTx2kHuAVgLHyrbYhd",
+      "name": "go-billy.v4",
+      "version": "2.0.0"
+    },
+    {
+      "author": "magik6k",
+      "hash": "QmYJyRP8X5ukYThPSE3fUoVB9qGMshEnHkixhbZVPoCZY6",
+      "name": "gods",
       "version": "1.0.1"
     }
   ],
