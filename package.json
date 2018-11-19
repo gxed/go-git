@@ -60,6 +60,18 @@
       "hash": "QmYJyRP8X5ukYThPSE3fUoVB9qGMshEnHkixhbZVPoCZY6",
       "name": "gods",
       "version": "1.0.1"
+    },
+    {
+      "author": "magik6k",
+      "hash": "Qmf2MTEC6ZdWfadcMszdZA6AMyFPWX3cwNgUKpr6Jq4pM1",
+      "name": "ssh_config",
+      "version": "1.0.0"
+    },
+    {
+      "author": "magik6k",
+      "hash": "QmdYdnNEFtGEycNa1W5C6PBP1PvCgV6KXE7EXfRX8JJfPR",
+      "name": "go-flags",
+      "version": "1.0.0"
     }
   ],
   "gxVersion": "0.12.1",
