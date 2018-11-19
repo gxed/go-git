@@ -2,7 +2,10 @@ package git
 
 import (
 	"errors"
+	"regexp"
+	"strings"
 
+	"golang.org/x/crypto/openpgp"
 	"gopkg.in/src-d/go-git.v4/config"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
@@ -40,6 +43,8 @@ type CloneOptions struct {
 	ReferenceName plumbing.ReferenceName
 	// Fetch only ReferenceName if true.
 	SingleBranch bool
+	// No checkout of HEAD after clone if true.
+	NoCheckout bool
 	// Limit fetching to the specified number of commits.
 	Depth int
 	// RecurseSubmodules after the clone is created, initialize all submodules
@@ -95,6 +100,9 @@ type PullOptions struct {
 	// stored, if nil nothing is stored and the capability (if supported)
 	// no-progress, is sent to the server to avoid send this information.
 	Progress sideband.Progress
+	// Force allows the pull to update a local branch even when the remote
+	// branch does not descend from it.
+	Force bool
 }
 
 // Validate validates the fields and sets the default values.
@@ -142,6 +150,9 @@ type FetchOptions struct {
 	// Tags describe how the tags will be fetched from the remote repository,
 	// by default is TagFollowing.
 	Tags TagMode
+	// Force allows the fetch to update a local branch even when the remote
+	// branch does not descend from it.
+	Force bool
 }
 
 // Validate validates the fields and sets the default values.
@@ -220,8 +231,9 @@ var (
 
 // CheckoutOptions describes how a checkout 31operation should be performed.
 type CheckoutOptions struct {
-	// Hash to be checked out, if used HEAD will in detached mode. Branch and
-	// Hash are mutually exclusive, if Create is not used.
+	// Hash is the hash of the commit to be checked out. If used, HEAD will be
+	// in detached mode. If Create is not used, Branch and Hash are mutually
+	// exclusive.
 	Hash plumbing.Hash
 	// Branch to be checked out, if Branch and Hash are empty is set to `master`.
 	Branch plumbing.ReferenceName
@@ -298,12 +310,31 @@ func (o *ResetOptions) Validate(r *Repository) error {
 	return nil
 }
 
+type LogOrder int8
+
+const (
+	LogOrderDefault LogOrder = iota
+	LogOrderDFS
+	LogOrderDFSPost
+	LogOrderBSF
+	LogOrderCommitterTime
+)
+
 // LogOptions describes how a log action should be performed.
 type LogOptions struct {
 	// When the From option is set the log will only contain commits
 	// reachable from it. If this option is not set, HEAD will be used as
 	// the default From.
 	From plumbing.Hash
+
+	// The default traversal algorithm is Depth-first search
+	// set Order=LogOrderCommitterTime for ordering by committer time (more compatible with `git log`)
+	// set Order=LogOrderBSF for Breadth-first search
+	Order LogOrder
+
+	// Show only those commits in which the specified file was inserted/updated.
+	// It is equivalent to running `git log -- <file-name>`.
+	FileName *string
 }
 
 var (
@@ -323,6 +354,10 @@ type CommitOptions struct {
 	// Parents are the parents commits for the new commit, by default when
 	// len(Parents) is zero, the hash of HEAD reference is used.
 	Parents []plumbing.Hash
+	// SignKey denotes a key to sign the commit with. A nil value here means the
+	// commit will not be signed. The private key must be present and already
+	// decrypted.
+	SignKey *openpgp.Entity
 }
 
 // Validate validates the fields and sets the default values.
@@ -348,3 +383,97 @@ func (o *CommitOptions) Validate(r *Repository) error {
 
 	return nil
 }
+
+var (
+	ErrMissingName    = errors.New("name field is required")
+	ErrMissingTagger  = errors.New("tagger field is required")
+	ErrMissingMessage = errors.New("message field is required")
+)
+
+// CreateTagOptions describes how a tag object should be created.
+type CreateTagOptions struct {
+	// Tagger defines the signature of the tag creator.
+	Tagger *object.Signature
+	// Message defines the annotation of the tag. It is canonicalized during
+	// validation into the format expected by git - no leading whitespace and
+	// ending in a newline.
+	Message string
+	// SignKey denotes a key to sign the tag with. A nil value here means the tag
+	// will not be signed. The private key must be present and already decrypted.
+	SignKey *openpgp.Entity
+}
+
+// Validate validates the fields and sets the default values.
+func (o *CreateTagOptions) Validate(r *Repository, hash plumbing.Hash) error {
+	if o.Tagger == nil {
+		return ErrMissingTagger
+	}
+
+	if o.Message == "" {
+		return ErrMissingMessage
+	}
+
+	// Canonicalize the message into the expected message format.
+	o.Message = strings.TrimSpace(o.Message) + "\n"
+
+	return nil
+}
+
+// ListOptions describes how a remote list should be performed.
+type ListOptions struct {
+	// Auth credentials, if required, to use with the remote repository.
+	Auth transport.AuthMethod
+}
+
+// CleanOptions describes how a clean should be performed.
+type CleanOptions struct {
+	Dir bool
+}
+
+// GrepOptions describes how a grep should be performed.
+type GrepOptions struct {
+	// Patterns are compiled Regexp objects to be matched.
+	Patterns []*regexp.Regexp
+	// InvertMatch selects non-matching lines.
+	InvertMatch bool
+	// CommitHash is the hash of the commit from which worktree should be derived.
+	CommitHash plumbing.Hash
+	// ReferenceName is the branch or tag name from which worktree should be derived.
+	ReferenceName plumbing.ReferenceName
+	// PathSpecs are compiled Regexp objects of pathspec to use in the matching.
+	PathSpecs []*regexp.Regexp
+}
+
+var (
+	ErrHashOrReference = errors.New("ambiguous options, only one of CommitHash or ReferenceName can be passed")
+)
+
+// Validate validates the fields and sets the default values.
+func (o *GrepOptions) Validate(w *Worktree) error {
+	if !o.CommitHash.IsZero() && o.ReferenceName != "" {
+		return ErrHashOrReference
+	}
+
+	// If none of CommitHash and ReferenceName are provided, set commit hash of
+	// the repository's head.
+	if o.CommitHash.IsZero() && o.ReferenceName == "" {
+		ref, err := w.r.Head()
+		if err != nil {
+			return err
+		}
+		o.CommitHash = ref.Hash()
+	}
+
+	return nil
+}
+
+// PlainOpenOptions describes how opening a plain repository should be
+// performed.
+type PlainOpenOptions struct {
+	// DetectDotGit defines whether parent directories should be
+	// walked until a .git directory or file is found.
+	DetectDotGit bool
+}
+
+// Validate validates the fields and sets the default values.
+func (o *PlainOpenOptions) Validate() error { return nil }

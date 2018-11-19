@@ -21,7 +21,7 @@ var (
 	// ErrMalformedSignature is returned by Decode when the index header file is
 	// malformed
 	ErrMalformedSignature = errors.New("malformed index signature file")
-	// ErrInvalidChecksum is returned by Decode if the SHA1 hash missmatch with
+	// ErrInvalidChecksum is returned by Decode if the SHA1 hash mismatch with
 	// the read content
 	ErrInvalidChecksum = errors.New("invalid checksum")
 
@@ -200,11 +200,8 @@ func (d *Decoder) padEntry(idx *Index, e *Entry, read int) error {
 
 	entrySize := read + len(e.Name)
 	padLen := 8 - entrySize%8
-	if _, err := io.CopyN(ioutil.Discard, d.r, int64(padLen)); err != nil {
-		return err
-	}
-
-	return nil
+	_, err := io.CopyN(ioutil.Discard, d.r, int64(padLen))
+	return err
 }
 
 func (d *Decoder) readExtensions(idx *Index) error {
@@ -288,7 +285,7 @@ func (d *Decoder) readChecksum(expected []byte, alreadyRead [4]byte) error {
 		return err
 	}
 
-	if bytes.Compare(h[:], expected) != 0 {
+	if !bytes.Equal(h[:], expected) {
 		return ErrInvalidChecksum
 	}
 
@@ -407,7 +404,7 @@ func (d *resolveUndoDecoder) Decode(ru *ResolveUndo) error {
 
 func (d *resolveUndoDecoder) readEntry() (*ResolveUndoEntry, error) {
 	e := &ResolveUndoEntry{
-		Stages: make(map[Stage]plumbing.Hash, 0),
+		Stages: make(map[Stage]plumbing.Hash),
 	}
 
 	path, err := binary.ReadUntil(d.r, '\x00')
